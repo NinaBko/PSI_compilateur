@@ -3,10 +3,21 @@
     int yylex();
     void yyerror(char *str);
 %}
-%token tMAIN tINT tEQ tID tPO tPF tAO tAF tPV tVR
+%token tMAIN tINT tEQ tPO tPF tAO tAF tPV tVR tPLUS tMOINS tMUL tDIV
+%union{
+    int nb;
+    char* str;
+}
+%left tPLUS tMOINS
+%left tMUL tDIV
+%right tEQ
+%token <nb> tNB tXX
+%token <str> tID
+%type <nb> Expr
 
 %% 
 %start File;
+
 File:
     Main;
 Main: 
@@ -15,7 +26,13 @@ Body:
     Definition {printf("definition");}
     | Affectation;
 Affectation:
-    /* vide */;
+    tID tEQ Expr;
+Expr:
+    tNB                 {$$=$1;}
+    | tID               {$$=0;}
+    | Expr tPLUS Expr   {$$=$1+$3; printf("%d",$$);}
+    | Expr tMUL Expr    {$$=$1*$3; printf("%d",$$);}
+    | tPO Expr tPF      {$$=$2;};
 Definition:
     tINT tID DefinitionN tPV;
 DefinitionN:
@@ -24,7 +41,9 @@ DefinitionN:
 
 %%
     /* Supprimer cette partie dans le fichier .l si presente ici*/
-void yyerror(char *str) {};
+void yyerror(char *str) {
+    fprintf(stderr,"%s\n",str);
+};
 int main() {
     yyparse(); 
     return 0;
