@@ -4,7 +4,7 @@
 
 %%
     /* structurel */
-"main()"                {printf("tMAIN");}
+"main"                  {printf("tMAIN");}
 "{"                     {printf("tAO");}
 "}"                     {printf("tAF");}
 "("                     {printf("tPO");}
@@ -13,11 +13,19 @@
     /* type des variables */
 "const"                 {printf("tCONST");}
 "int"                   {printf("tINT");}
-[A-Za-z]+[A-Za-z0-9_]   {printf("tID");}
+
+    /* variables */
+[A-Za-z]+[A-Za-z0-9_]*  {
+                            yylval.str=strdup(yytext);  
+                            return tID;
+                        }
+[0-9]+                  {
+                            yylval.nb=(int)atof(yytext); 
+                            return tNB;
+                        }                  
 
     /* separateurs */
 " "                     {printf("tSPACE");}
-"   "                   {printf("tTAB");}
 ","                     {printf("tVR");}
 
     /* fin de l'instruction */
@@ -25,10 +33,10 @@
 
     /* operations arithmetiques */
 "+"                     {printf("tPLUS");}
-"-"                     {printf("tMINUS");}
-"*"                     {printf("tMULTIPLY");}
-"/"                     {printf("tDIVIDE");}
-"="                     {printf("tEQUALS");}
+"-"                     {printf("tMOINS");}
+"*"                     {printf("tMUL");}
+"/"                     {printf("tDIV");}
+"="                     {printf("tEQ"); return tEQ;}
 
     /* erreur pour tous les caracteres non reconnus */
 .                       {printf("Error !");}
