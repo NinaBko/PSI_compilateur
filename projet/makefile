@@ -6,7 +6,7 @@ all :
 	## Pour le fichier .y
 	yacc -d compiler.y 
 	# pour debuguer flex -d compiler.l 
-	flex compiler.l 
+	flex -d compiler.l 
 	gcc lex.yy.c y.tab.c -o compiler
 
 
