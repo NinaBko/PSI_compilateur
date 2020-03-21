@@ -2,41 +2,45 @@
     #include "y.tab.h"
 %}
 
+blancs                  [ \t]+
+
+vID                     [_a-zA-Z][_a-zA-Z0-9]*
+chiffre                 [0-9]
+vNB                     {chiffre}+
+exposant                [eE][+-]?{entier}
+
+reel                    {entier}("."{entier})?{exposant}?
+
 %%
+{blancs}                { /* ignore */ }
+
     /* structurel */
-"main"                  {printf("tMAIN");}
-"{"                     {printf("tAO");}
-"}"                     {printf("tAF");}
-"("                     {printf("tPO");}
-")"                     {printf("tPF");}
+"main"                  {return tMAIN;}
+"{"                     {return tAO;}
+"}"                     {return tAF;}
+"("                     {return tPO;}
+")"                     {return tPF;}
 
     /* type des variables */
-"const"                 {printf("tCONST");}
-"int"                   {printf("tINT");}
+"const"                 {return tCONST;}
+"int"                   {return tINT;}
 
     /* variables */
-[A-Za-z]+[A-Za-z0-9_]*  {
-                            yylval.str=strdup(yytext);  
-                            return tID;
-                        }
-[0-9]+                  {
-                            yylval.nb=(int)atof(yytext); 
-                            return tNB;
-                        }                  
+{vID}                   {yylval.str = strdup(yytext);   return tID;}
+{vNB}                   {yylval.nb = (int)atof(yytext); return tNB;}                  
 
     /* separateurs */
-" "                     {printf("tSPACE");}
-","                     {printf("tVR");}
+","                     {return tVR;}
 
     /* fin de l'instruction */
-";"                     {printf("tPV");}
+";"                     {return tPV;}
 
     /* operations arithmetiques */
-"+"                     {printf("tPLUS");}
-"-"                     {printf("tMOINS");}
-"*"                     {printf("tMUL");}
-"/"                     {printf("tDIV");}
-"="                     {printf("tEQ"); return tEQ;}
+"+"                     {return tPLUS;}
+"-"                     {return tMOINS;}
+"*"                     {return tMUL;}
+"/"                     {return tDIV;}
+"="                     {return tEQ;}
 
     /* erreur pour tous les caracteres non reconnus */
 .                       {printf("Error !");}
