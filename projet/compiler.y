@@ -3,7 +3,7 @@
     int yylex();
     void yyerror(char *str);
 %}
-%token tMAIN tINT tEQ tPO tPF tAO tAF tPV tVR tPLUS tMOINS tMUL tDIV
+%token tMAIN tINT tEQ tPO tPF tAO tAF tPV tVR tPLUS tMOINS tMUL tDIV tCONST
 %union{
     int nb;
     char* str;
@@ -23,15 +23,17 @@ File:
 Main: 
     tMAIN tPO tPF tAO Body tAF;
 Body: 
-    Definition {printf("definition");}
+    Definition          {printf("definition");}
     | Affectation;
 Affectation:
     tID tEQ Expr;
 Expr:
     tNB                 {$$=$1;}
-    | tID               {$$=0;}
+    | tID               {printf("%s",$1);}
     | Expr tPLUS Expr   {$$=$1+$3; printf("%d",$$);}
+    | Expr tMOINS Expr  {$$=$1-$3; printf("%d",$$);}
     | Expr tMUL Expr    {$$=$1*$3; printf("%d",$$);}
+    | Expr tDIV Expr    {$$=$1/$3; printf("%d",$$);}
     | tPO Expr tPF      {$$=$2;};
 Definition:
     tINT tID DefinitionN tPV;
