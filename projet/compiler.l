@@ -2,9 +2,12 @@
     #include "y.tab.h"
 %}
 
-blancs                  [ \t]+
+    /* definition separateurs */
+tabulation              [ \t]+
+newLine                 [\n]+
+espace                  [ ]+
 
-vID                     [_a-zA-Z][_a-zA-Z0-9]*
+vID                     [a-zA-Z][_a-zA-Z0-9]*
 chiffre                 [0-9]
 vNB                     {chiffre}+
 exposant                [eE][+-]?{entier}
@@ -12,10 +15,13 @@ exposant                [eE][+-]?{entier}
 reel                    {entier}("."{entier})?{exposant}?
 
 %%
-{blancs}                { /* ignore */ }
+{espace}                { /* ignore */ }
+{tabulation}            { /* ignore */ }
+{newLine}               { /* ignore */ }
 
     /* structurel */
 "main"                  {return tMAIN;}
+"printf"                {return tPRINTF;}
 "{"                     {return tAO;}
 "}"                     {return tAF;}
 "("                     {return tPO;}
