@@ -9,7 +9,7 @@ espace                  [ ]+
 
 vID                     [a-zA-Z][_a-zA-Z0-9]*
 chiffre                 [0-9]
-vNB                     {chiffre}+
+entier                  {chiffre}+
 exposant                [eE][+-]?{entier}
 
 reel                    {entier}("."{entier})?{exposant}?
@@ -33,7 +33,7 @@ reel                    {entier}("."{entier})?{exposant}?
 
     /* variables */
 {vID}                   {yylval.str = strdup(yytext);   return tID;}
-{vNB}                   {yylval.nb = (int)atof(yytext); return tNB;}                  
+{reel}                  {yylval.nb  = atof(yytext); return tNB;}                  
 
     /* separateurs */
 ","                     {return tVR;}

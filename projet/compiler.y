@@ -24,9 +24,9 @@ File:
 Main: 
     tMAIN tPO tPF tAO Body tAF;
 Body: 
-    Definition                  {printf("definition");}
-    | Affectation
-    | Printf;
+    Definition                  {printf("Definition");}
+    | Definition Affectation    {printf("Definition et affectation");}
+    | Definition Printf;
 Printf:
     tPRINTF tPO tNB tPF         {$$=$3; printf("%d",$$);};
 Affectation:
