@@ -7,7 +7,7 @@ all :
 	yacc -d compiler.y 
 	# pour debuguer flex -d compiler.l 
 	flex -d compiler.l 
-	gcc lex.yy.c y.tab.c -o compiler
+	gcc lex.yy.c y.tab.c symboltable.c -o compiler
 
 
 clean :
