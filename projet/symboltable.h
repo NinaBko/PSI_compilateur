@@ -1,5 +1,3 @@
-#include <symboltable.h>
-
 /** Structure elements table */
 /* id       - nom du symbole */
 /* adresse  - emplacement dans la memoire */
