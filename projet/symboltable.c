@@ -22,18 +22,17 @@ typedef struct s_element {
 } element;
 
 typedef struct s_table {
-    int index;                      // index sur l'element actuel de la table
+    int index;                      // index sur le premier element vide
     element table[TAILLE_TABLE];    // structure de la table
 } table;
 
 // On cree la table et on met tous ses elements a 0
 table global_table = {0};
 
-// On cree une variable globale pour le nombre d'elements dans la table
-int nb_elements = 0;
-
 // Fonction qui rajoute un element dans la table
 void add_table(char *e_id, u_int16_t e_adress, int e_init, int e_type, int e_depth) {
+
+
     element new_element = global_table.table[global_table.index];
     element *p_new_element = &new_element;
     strcpy(p_new_element -> id, e_id);
@@ -43,12 +42,11 @@ void add_table(char *e_id, u_int16_t e_adress, int e_init, int e_type, int e_dep
     p_new_element -> depth = e_depth;
 
     global_table.index ++;
-    nb_elements ++;
 }
 
 // Fonction qui trouve le bon element et renvoie un pointeur sur la ligne de la table
 element* get_element(char *id) {
-    int index = nb_elements - 1;
+    int index = global_table.index;
     element *element_trouve = malloc(sizeof(element_trouve));
     element_trouve = NULL;
     // on parcourt en partant de la fin de la table
@@ -63,11 +61,12 @@ element* get_element(char *id) {
     return element_trouve;
 }
 
-
 // Gestion de la profondeur 
-
-
-
-
-
+void erase_depth() {
+    int index = global_table.index;
+    int act_depth = global_table.table[index].depth;
+    while (global_table.table[index].depth == act_depth) {
+        global_table.index --;
+    }
+}
 

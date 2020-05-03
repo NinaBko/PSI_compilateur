@@ -1,8 +1,9 @@
 %{
     #include <stdio.h>
-    #include <symboltable.h> 
+    #include "symboltable.h"
     int yylex();
     void yyerror(char *str);
+    int depth = 0;
 %}
 %token tMAIN tINT tEQ tPO tPF tAO tAF tPV tVR tPLUS tMOINS tMUL tDIV tCONST tPRINTF
 %union{
@@ -45,6 +46,10 @@ Definition:
 DefinitionN:
     /* vide */
     | tVR tID DefinitionN;
+BeginDepth:
+    tAO                         {depth ++;};
+EndDepth:
+    tAF                         {erase_depth(); depth --;};
 
 %%
     /* Supprimer cette partie dans le fichier .l si presente ici*/
