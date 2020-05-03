@@ -31,8 +31,7 @@ table global_table = {0};
 
 // Fonction qui rajoute un element dans la table
 void add_table(char *e_id, u_int16_t e_adress, int e_init, int e_type, int e_depth) {
-
-
+    // Check if a double definition exists
     element new_element = global_table.table[global_table.index];
     element *p_new_element = &new_element;
     strcpy(p_new_element -> id, e_id);
