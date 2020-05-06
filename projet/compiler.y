@@ -42,7 +42,7 @@ Expr:
     | Expr tDIV Expr            {$$=$1/$3; printf("%d",$$);}
     | tPO Expr tPF              {$$=$2;};
 Definition:
-    tINT tID DefinitionN tPV;
+    tINT tID DefinitionN tPV    {add_table($2, 0, 0, depth); print_table();};
 DefinitionN:
     /* vide */
     | tVR tID DefinitionN;
