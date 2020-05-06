@@ -15,14 +15,14 @@
 
 typedef struct s_element {
     char *id;
-    u_int16_t adress;                // adresse = index dans la table /16bits
+    u_int16_t adress;               // adresse = index dans la table /16bits
     int init;                       // 0 - non initialise, 1 - intitialise
     int type;                       // 0 - non constant, 1 - constante
     int depth;
 } element;
 
 typedef struct s_table {
-    int index;                      // index sur le premier element vide
+    u_int16_t index;                      // index sur le premier element vide
     element table[TAILLE_TABLE];    // structure de la table
 } table;
 
@@ -31,7 +31,7 @@ table global_table = {0};
 
 // Fonction qui trouve le bon element et renvoie un pointeur sur la ligne de la table
 element* get_element(char *id) {
-    int index = global_table.index;
+    u_int16_t index = global_table.index;
     element *element_trouve = malloc(sizeof(element_trouve));
     element_trouve = NULL;
     // on parcourt en partant de la fin de la table
@@ -47,36 +47,41 @@ element* get_element(char *id) {
 }
 
 // Fonction qui rajoute un element dans la table
-void add_table(char *e_id, u_int16_t e_adress, int e_init, int e_type, int e_depth) {
+void add_table(char *e_id, int e_init, int e_type, int e_depth) {
     // Check if a double definition exists
     element* element_cmp = get_element(e_id);
     if (element_cmp -> depth == e_depth) {
         printf("ERREUR: double definition !");
     }
     else {
-        element new_element = global_table.table[global_table.index];
-        element *p_new_element = &new_element;
-        strcpy(p_new_element -> id, e_id);
-        p_new_element -> adress = e_adress;
-        p_new_element -> init = e_init;
-        p_new_element -> type = e_type;
-        p_new_element -> depth = e_depth;
-
+        element e;
+        strcpy(e.id, e_id);
+        e.adress = global_table.index;
+        e.init = e_init;
+        e.type = e_type;
+        e.depth = e_depth;
+        global_table.table[global_table.index] = e;
         global_table.index ++;
-    }
-    
+    }  
 }
 
 // Gestion de la profondeur 
 void erase_depth() {
-    int index = global_table.index;
+    u_int16_t index = global_table.index;
     int act_depth = global_table.table[index].depth;
     while (global_table.table[index].depth == act_depth) {
         global_table.index --;
     }
 }
 
-void print_table(table t) {
-    //TODO
+void print_table() {
+    printf("Table des symboles \n");
+    printf("**********************************************\n");
+    printf("Format: | id | adress | init | type | depth |\n");
+    int i;
+    for (i = 0; i < global_table.index; i++) {
+        printf("| %s | %d | %d | %d | %d |\n", global_table.table[i].id, global_table.table[i].adress, global_table.table[i].init, global_table.table[i].type, global_table.table[i].depth);
+        printf("**********************************************\n");
+    }
 }
 
