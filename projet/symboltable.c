@@ -93,7 +93,6 @@ void test_get_element() {
 
 // Fonction qui rajoute un element dans la table
 void add_table(char *e_id, int e_init, int e_type, int e_depth) {
-    init();
     // Check if a double definition exists
     if (get_element(e_id) != NULL && get_element(e_id) -> depth == e_depth) {
         printf("ERREUR: double definition !");
@@ -111,6 +110,23 @@ void add_table(char *e_id, int e_init, int e_type, int e_depth) {
     }  
 }
 
+// Fonction qui affecte une valeur à la variable
+void affect(char *e_id, int depth) {
+    if (get_element(e_id) != NULL) {
+        int type = get_element(e_id) -> type;
+        int init = get_element(e_id) -> init;
+        if (type == 1 && init == 1) {
+            printf("La constante a deja ete affectee !\n");
+        }
+        else {
+            get_element(e_id) -> init = 1;
+        }
+    }
+    else {
+        printf("Cette variable n'a pas ete definie !\n");
+    }
+}
+
 // Gestion de la profondeur 
 void erase_depth() {
     uint16_t index = global_table.index;
@@ -123,11 +139,10 @@ void erase_depth() {
 void print_table() {
     printf("Table des symboles \n");
     printf("**********************************************\n");
-    printf("Format: | id | adress | init | type | depth |\n");
+    printf("| id | adress | init | type | depth |\n");
     int i;
     for (i = 0; i < global_table.index; i++) {
-        printf("| %s | %d | %d | %d | %d |\n", global_table.table[i].id, global_table.table[i].adress, global_table.table[i].init, global_table.table[i].type, global_table.table[i].depth);
-        printf("**********************************************\n");
+        printf("| %s  |    %d   |  %d   |  %d   |   %d   |\n", global_table.table[i].id, global_table.table[i].adress, global_table.table[i].init, global_table.table[i].type, global_table.table[i].depth);
     }
 }
 
@@ -137,3 +152,13 @@ void print_table() {
     print_table();
     //test_get_element();
 } */
+
+// Fonctions pour la generation des instructions assembleur
+
+void push() {
+    //TODO
+}
+
+void pop() {
+    //TODO
+}

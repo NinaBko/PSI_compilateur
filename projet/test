@@ -1,3 +1,7 @@
 main(){
-    int i;
+    const a; 
+    int b; 
+    b = 12;
+    const i, int c, int f;
+    i = 12;
 }

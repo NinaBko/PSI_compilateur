@@ -4,6 +4,7 @@
     int yylex();
     void yyerror(char *str);
     int depth = 0;
+    int sommet_pile = 100;
 %}
 %token tMAIN tINT tEQ tPO tPF tAO tAF tPV tVR tPLUS tMOINS tMUL tDIV tCONST tPRINTF
 %union{
@@ -24,32 +25,36 @@
 File:
     Main;
 Main: 
-    tMAIN tPO tPF tAO Body tAF;
+    tMAIN tPO {init();} tPF tAO Body tAF;         
 Body: 
-    Definition                  {printf("Definition");}
-    | Definition Affectation    {printf("Definition et affectation");}
-    | Definition Printf;
+    /*vide*/
+    | Definition Body                              {printf("Definition\n");}
+    | Affectation Body                          {printf("Affectation\n");}
+    | Definition Affectation Body           {printf("Definition et affectation\n");}
+    | Definition Printf Body
 Printf:
-    tPRINTF tPO tNB tPF         {$$=$3; printf("%d",$$);};
+    tPRINTF tPO tNB tPF                     {$$=$3; printf("%d",$$);};
 Affectation:
-    tID tEQ Expr;
+    tID tEQ Expr tPV                        {affect($1, depth);};
 Expr:
-    tNB                         {$$=$1;}
-    | tID                       {printf("%s",$1);}
-    | Expr tPLUS Expr           {$$=$1+$3; printf("%d",$$);}
-    | Expr tMOINS Expr          {$$=$1-$3; printf("%d",$$);}
-    | Expr tMUL Expr            {$$=$1*$3; printf("%d",$$);}
-    | Expr tDIV Expr            {$$=$1/$3; printf("%d",$$);}
-    | tPO Expr tPF              {$$=$2;};
+    tNB                                     {$$=$1;}
+    | tID                                   {printf("%s",$1);}
+    | Expr tPLUS Expr                       {$$=$1+$3; printf("%d",$$);}
+    | Expr tMOINS Expr                      {$$=$1-$3; printf("%d",$$);}
+    | Expr tMUL Expr                        {$$=$1*$3; printf("%d",$$);}
+    | Expr tDIV Expr                        {$$=$1/$3; printf("%d",$$);}
+    | tPO Expr tPF                          {$$=$2;};
 Definition:
-    tINT tID DefinitionN tPV    {add_table($2, 0, 0, depth); print_table();};
+    tINT tID DefinitionN tPV                {add_table($2, 0, 0, depth);}
+    | tCONST tID DefinitionN tPV            {add_table($2, 0, 1, depth);};     
 DefinitionN:
     /* vide */
-    | tVR tID DefinitionN;
+    | tVR tINT tID DefinitionN              {add_table($3, 0, 0, depth);}
+    | tVR tCONST tID DefinitionN            {add_table($3, 0, 1, depth);};
 BeginDepth:
-    tAO                         {depth ++;};
+    tAO                                     {depth ++;};
 EndDepth:
-    tAF                         {erase_depth(); depth --;};
+    tAF                                     {erase_depth(); depth --;};
 
 %%
     /* Supprimer cette partie dans le fichier .l si presente ici*/
@@ -58,5 +63,6 @@ void yyerror(char *str) {
 };
 int main() {
     yyparse(); 
+    print_table();
     return 0;
 }
