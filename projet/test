@@ -1,7 +1,5 @@
 main(){
-    const a; 
-    int b; 
-    b = 12;
-    const i, int c, int f;
-    i = 12;
+    int a; 
+    int b;
+    b =  2 + 5 * a - 1;
 }

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define TAILLE_TABLE 100
+#define TAILLE_TABLE 1000
 
 /** Structure elements table */
 /* id       - nom du symbole */
@@ -110,6 +110,11 @@ void add_table(char *e_id, int e_init, int e_type, int e_depth) {
     }  
 }
 
+uint16_t get_adress(char* e) {
+    uint16_t addr =get_element(e)-> adress;
+    return addr;
+}
+
 // Fonction qui affecte une valeur à la variable
 void affect(char *e_id, int depth) {
     if (get_element(e_id) != NULL) {
@@ -141,7 +146,7 @@ void print_table() {
     printf("**********************************************\n");
     printf("| id | adress | init | type | depth |\n");
     int i;
-    for (i = 0; i < global_table.index; i++) {
+    for (i = 0; i < 101; i++) {
         printf("| %s  |    %d   |  %d   |  %d   |   %d   |\n", global_table.table[i].id, global_table.table[i].adress, global_table.table[i].init, global_table.table[i].type, global_table.table[i].depth);
     }
 }
@@ -155,10 +160,28 @@ void print_table() {
 
 // Fonctions pour la generation des instructions assembleur
 
+void print_index() {
+    printf("index = %d\n", global_table.index);
+}
+
 void push() {
-    //TODO
+    element e;
+    e.id = "";
+    e.adress = sommet_pile;
+    e.init = 1;
+    e.type = 0;
+    e.depth = 0;
+    global_table.table[sommet_pile] = e;
+    sommet_pile--;
 }
 
 void pop() {
-    //TODO
+    element e;
+    e.id = "";
+    e.adress = 0;
+    e.init = 0;
+    e.type = 0;
+    e.depth = 0;
+    global_table.table[sommet_pile] = e;
+    sommet_pile ++;
 }

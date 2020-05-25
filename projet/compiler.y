@@ -4,7 +4,6 @@
     int yylex();
     void yyerror(char *str);
     int depth = 0;
-    int sommet_pile = 100;
 %}
 %token tMAIN tINT tEQ tPO tPF tAO tAF tPV tVR tPLUS tMOINS tMUL tDIV tCONST tPRINTF
 %union{
@@ -28,22 +27,21 @@ Main:
     tMAIN tPO {init();} tPF tAO Body tAF;         
 Body: 
     /*vide*/
-    | Definition Body                              {printf("Definition\n");}
-    | Affectation Body                          {printf("Affectation\n");}
-    | Definition Affectation Body           {printf("Definition et affectation\n");}
+    | Definition Body                       {printf("Definition\n");}
+    | Affectation Body                      {printf("Affectation\n");}
     | Definition Printf Body
 Printf:
     tPRINTF tPO tNB tPF                     {$$=$3; printf("%d",$$);};
 Affectation:
-    tID tEQ Expr tPV                        {affect($1, depth);};
+    tID tEQ Expr tPV                        {affect($1, depth); printf("COP @%d @%d\n", get_adress($1), sommet_pile); pop();};
 Expr:
-    tNB                                     {$$=$1;}
-    | tID                                   {printf("%s",$1);}
-    | Expr tPLUS Expr                       {$$=$1+$3; printf("%d",$$);}
-    | Expr tMOINS Expr                      {$$=$1-$3; printf("%d",$$);}
-    | Expr tMUL Expr                        {$$=$1*$3; printf("%d",$$);}
-    | Expr tDIV Expr                        {$$=$1/$3; printf("%d",$$);}
-    | tPO Expr tPF                          {$$=$2;};
+    tNB                                     {printf("AFC @%d %d\n", sommet_pile, $1); push();}
+    | tID                                   {printf("COP @%d @%d\n", sommet_pile, get_adress($1)); push();}
+    | Expr tPLUS Expr                       {printf("ADD @%d @%d @%d \n", sommet_pile, sommet_pile, sommet_pile - 1); pop(); pop(); push();}
+    | Expr tMOINS Expr                      {printf("SOU @%d @%d @%d \n", sommet_pile, sommet_pile, sommet_pile -1); pop(); pop(); pop();}
+    | Expr tMUL Expr                        {printf("MUL @%d @%d @%d \n", sommet_pile, sommet_pile, sommet_pile - 1); pop(); pop(); push();}
+    | Expr tDIV Expr                        {printf("DIV @%d @%d @%d \n", sommet_pile, sommet_pile, sommet_pile - 1); pop(); pop(); push();}
+    | tPO Expr tPF                          {printf("Affect\n");};
 Definition:
     tINT tID DefinitionN tPV                {add_table($2, 0, 0, depth);}
     | tCONST tID DefinitionN tPV            {add_table($2, 0, 1, depth);};     
@@ -62,7 +60,8 @@ void yyerror(char *str) {
     fprintf(stderr,"%s\n",str);
 };
 int main() {
+    sommet_pile = 100;
     yyparse(); 
-    print_table();
+    //print_table();
     return 0;
 }
